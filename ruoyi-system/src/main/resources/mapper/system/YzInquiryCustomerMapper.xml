@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.YzInquiryCustomerMapper">
+    
+    <resultMap type="YzInquiryCustomer" id="YzInquiryCustomerResult">
+        <result property="customerId"    column="customer_id"    />
+        <result property="cusName"    column="cus_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="company"    column="company"    />
+        <result property="remark"    column="remark"    />
+        <result property="regTime"    column="reg_time"    />
+        <result property="regVisit"    column="reg_visit"    />
+    </resultMap>
+
+    <sql id="selectYzInquiryCustomerVo">
+        select customer_id, cus_name, phone, company, remark, reg_time, reg_visit from yz_inquiry_customer
+    </sql>
+
+    <select id="selectYzInquiryCustomerList" parameterType="YzInquiryCustomer" resultMap="YzInquiryCustomerResult">
+        <include refid="selectYzInquiryCustomerVo"/>
+        <where>  
+            <if test="cusName != null  and cusName != ''"> and cus_name like concat('%', #{cusName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="company != null  and company != ''"> and company = #{company}</if>
+            <if test="regTime != null "> and reg_time = #{regTime}</if>
+            <if test="regVisit != null "> and reg_visit = #{regVisit}</if>
+        </where>
+    </select>
+    
+    <select id="selectYzInquiryCustomerById" parameterType="Long" resultMap="YzInquiryCustomerResult">
+        <include refid="selectYzInquiryCustomerVo"/>
+        where customer_id = #{customerId}
+    </select>
+        
+    <insert id="insertYzInquiryCustomer" parameterType="YzInquiryCustomer" useGeneratedKeys="true" keyProperty="customerId">
+        insert into yz_inquiry_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cusName != null  and cusName != ''">cus_name,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="company != null  and company != ''">company,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="regTime != null ">reg_time,</if>
+            <if test="regVisit != null ">reg_visit,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cusName != null  and cusName != ''">#{cusName},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="company != null  and company != ''">#{company},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="regTime != null ">#{regTime},</if>
+            <if test="regVisit != null ">#{regVisit},</if>
+         </trim>
+    </insert>
+
+    <update id="updateYzInquiryCustomer" parameterType="YzInquiryCustomer">
+        update yz_inquiry_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cusName != null  and cusName != ''">cus_name = #{cusName},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="company != null  and company != ''">company = #{company},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="regTime != null ">reg_time = #{regTime},</if>
+            <if test="regVisit != null ">reg_visit = #{regVisit},</if>
+        </trim>
+        where customer_id = #{customerId}
+    </update>
+
+    <delete id="deleteYzInquiryCustomerById" parameterType="Long">
+        delete from yz_inquiry_customer where customer_id = #{customerId}
+    </delete>
+
+    <delete id="deleteYzInquiryCustomerByIds" parameterType="String">
+        delete from yz_inquiry_customer where customer_id in 
+        <foreach item="customerId" collection="array" open="(" separator="," close=")">
+            #{customerId}
+        </foreach>
+    </delete>
+    
+</mapper>
